@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.10)
+project(gold_price_prediction CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+add_library(gold_predictor GoldPricePredictor.cpp)
+add_executable(gold_price_prediction main.cpp)
+target_link_libraries(gold_price_prediction gold_predictor)
+target_compile_options(gold_predictor PRIVATE -Wall -Wextra)
+
+enable_testing()
+add_executable(test_predictor tests/test_predictor.cpp)
+target_link_libraries(test_predictor gold_predictor)
+add_test(NAME predictor COMMAND test_predictor)
