@@ -292,3 +292,14 @@ void GoldPricePredictor::writeCSV(const std::string& path) const {
             << ',' << r.goldUSDLow << ',' << r.goldUSDHigh << ',' << r.usdPerEur << "\n";
     }
 }
+
+void GoldPricePredictor::saveHistoryCSV(const std::string& path) const {
+    std::ofstream out(path);
+    if (!out) throw std::runtime_error("Impossible d'écrire le fichier : " + path);
+    out << "date,gold_eur,usd_per_eur\n" << std::fixed << std::setprecision(4);
+    for (const auto& m : history_) {
+        char ym[16];
+        std::snprintf(ym, sizeof ym, "%04d-%02d", m.year, m.month);
+        out << ym << ',' << m.goldEUR << ',' << m.usdPerEur << "\n";
+    }
+}

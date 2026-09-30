@@ -3,7 +3,8 @@
 Programme C++17 (sans dépendance) qui prédit l'évolution mensuelle du cours de l'once d'or en **euros** et en **dollars**, en incluant l'évolution prévue du taux de change USD/EUR.
 
 ## Fonctionnalités
-- Historique chargé depuis un **fichier CSV** (ou données d'exemple fictives intégrées).
+- Historique **en ligne** (`--online`) : or (XAUUSD) et EURUSD mensuels depuis [Stooq](https://stooq.com) (sans clé d'API), or converti en EUR.
+- Ou historique depuis un **fichier CSV** (ou données d'exemple fictives intégrées).
 - Deux modèles : **régression linéaire (moindres carrés)** et **lissage exponentiel de Holt** (paramètres optimisés automatiquement).
 - Mode `auto` : choisit le meilleur modèle par **backtest** sur les derniers mois (MAE / RMSE / MAPE affichés).
 - **Intervalles de confiance à 95 %** pour chaque mois prévu.
@@ -22,7 +23,14 @@ ou sans CMake : `g++ -std=c++17 -O2 -o gold_price_prediction main.cpp GoldPriceP
 ./build/gold_price_prediction                          # données d'exemple, 12 mois
 ./build/gold_price_prediction --data data/sample.csv --horizon 6 --model holt --output prev.csv
 ```
-Options : `--data`, `--horizon` (1–120), `--model linear|holt|auto`, `--output`, `--help`.
+Options : `--data`, `--online`, `--months`, `--source-url`, `--save-data`, `--horizon` (1–120), `--model linear|holt|auto`, `--output`, `--help`.
+
+### Données en ligne
+```
+./build/gold_price_prediction --online --months 60 --horizon 12 --save-data historique.csv
+./build/gold_price_prediction --data historique.csv        # réutilisation hors ligne
+```
+Nécessite `curl` et l'accès à `stooq.com`. Le mois en cours (incomplet) est exclu. Prix EUR = XAUUSD / EURUSD. `--source-url` permet de pointer vers un miroir ou un serveur compatible (format CSV Stooq : `Date,Open,High,Low,Close,Volume`, paramètres `s=<symbole>&i=m`).
 
 ### Format du CSV
 ```

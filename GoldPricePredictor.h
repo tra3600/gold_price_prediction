@@ -51,6 +51,8 @@ public:
     // Charge un CSV "date,gold_eur,usd_per_eur" (date = YYYY-MM). Lève std::runtime_error.
     void loadCSV(const std::string& path);
     void setData(const std::vector<MonthlyData>& data); // valide et trie
+    const std::vector<MonthlyData>& history() const { return history_; }
+    void saveHistoryCSV(const std::string& path) const; // relisible avec loadCSV
 
     // Calcule les prévisions pour `horizon` mois après le dernier point connu.
     void predictPrices(int horizon = 12, ModelType model = ModelType::Auto);

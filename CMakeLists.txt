@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-add_library(gold_predictor GoldPricePredictor.cpp)
+add_library(gold_predictor GoldPricePredictor.cpp DataFetcher.cpp)
 add_executable(gold_price_prediction main.cpp)
 target_link_libraries(gold_price_prediction gold_predictor)
 target_compile_options(gold_predictor PRIVATE -Wall -Wextra)
