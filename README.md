@@ -1,29 +1,37 @@
 # gold_price_prediction
-programme en C++ qui prédit l'évolution du cours de l'or en 2025   retourne l'évolution du cours de l'once d'or en euros et en dollar en incluant l'évolution du taux de change euros dollars prédit lui aussi
 
-Prédire l'évolution du cours de l'or et des taux de change est une tâche complexe qui nécessite l'utilisation de modèles économiques et de machine learning. Cependant, pour les besoins de cet exercice, nous allons simplifier le problème en utilisant des données historiques et des prédictions linéaires.
+Programme C++17 qui prédit mois par mois l'évolution du cours de l'once d'or en euros et en dollars, ainsi que du taux de change USD/EUR, avec un intervalle de confiance à 95 %.
 
-Nous allons créer un programme en C++ qui utilise des données fictives pour prédire les cours de l'or et les taux de change mois par mois pour 2025. Nous utiliserons des coefficients de tendance calculés à partir de données historiques simplifiées.
+## Méthode
 
-Explications
-GoldPricePredictor Class:
+- Régression linéaire (moindres carrés) sur **toutes** les données historiques, séparément pour l'or (EUR) et le taux USD/EUR.
+- Prix en USD = prix en EUR × taux prédit.
+- Intervalles de prédiction à ~95 % (s'élargissent avec l'horizon) ; l'intervalle USD combine les bornes or et taux (volontairement conservateur).
+- Affiche la pente (tendance mensuelle) et le R² de chaque modèle.
 
-Contient les données historiques simplifiées pour les prix de l'or en euros et les taux de change USD/EUR.
-Utilise une méthode de prédiction linéaire simple basée sur la tendance historique.
-Prédit les prix de l'or en euros et en dollars pour chaque mois de 2025.
-Affiche les prédictions.
-Prédiction Linéaire:
+> Les données intégrées sont **fictives**. Une droite de tendance ne remplace pas un vrai modèle économique : à n'utiliser que comme illustration.
 
-Calcule la tendance en utilisant les données historiques.
-Projette les prix futurs en ajoutant la tendance mois par mois.
-Affichage des Prédictions:
+## Compilation
 
-Affiche les prédictions pour chaque mois de 2025 en euros, en dollars, et les taux de change correspondants.
-Compilation et Exécution
-Assurez-vous que tous les fichiers sont dans le même répertoire, puis compilez et exécutez le programme avec :
+```bash
+cmake -S . -B build && cmake --build build
+ctest --test-dir build          # tests unitaires
+```
 
-g++ -o gold_price_prediction main.cpp GoldPricePredictor.cpp
-./gold_price_prediction
+ou simplement : `g++ -std=c++17 -o gold_price_prediction main.cpp GoldPricePredictor.cpp`
 
-Note
-Ce programme utilise des données historiques fictives et une méthode de prédiction linéaire très simplifiée. En réalité, la prédiction des cours de l'or et des taux de change nécessite des modèles économiques sophistiqués et des techniques de machine learning. Pour des prédictions précises, il est recommandé d'utiliser des bibliothèques de machine learning et des données réelles.
+## Utilisation
+
+```bash
+./build/gold_price_prediction                          # 12 mois à partir de 2025-01, données d'exemple
+./build/gold_price_prediction --mois 24 --debut 2025-06
+./build/gold_price_prediction --csv historique.csv --sortie predictions.csv
+```
+
+Format du CSV d'entrée (en-tête optionnel, ≥ 3 lignes) :
+
+```
+mois,or_eur,taux_usd_eur
+2024-01,1850.2,1.09
+2024-02,1862.7,1.08
+```
